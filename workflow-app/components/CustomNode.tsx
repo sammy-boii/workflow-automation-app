@@ -26,7 +26,7 @@ const nodeTypeConfig = {
     icon: <Play className="w-4 h-4" />,
     color: 'text-emerald-600 dark:text-emerald-400',
     borderColor: 'border-emerald-600 dark:border-emerald-400',
-    shadowColor: 'shadow-emerald-600/20 dark:shadow-emerald-400/20'
+    shadowColor: 'shadow-emerald-600/20 dark:shadow-emerald-400/20',
   },
   action: {
     icon: <Zap className="w-4 h-4" />,
@@ -67,27 +67,36 @@ export function CustomNode({ data, selected }: NodeProps) {
 
   return (
     <div className="relative group">
-      {/* External buttons */}
-      <div className="absolute -top-2 -right-2 z-10 flex gap-0.5">
+      {/* Hover-revealed action buttons */}
+      <div className="absolute -top-2 -right-2 z-10 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
         <Button
-          variant="ghost"
           size="sm"
-          className="h-5 w-5 p-0 bg-card/90 backdrop-blur-sm hover:bg-muted shadow-sm"
+          variant="outline"
+          className="h-6 w-6 p-0 bg-background/90 backdrop-blur-sm border-border/60 hover:bg-destructive hover:text-destructive-foreground hover:border-destructive"
+          onClick={(e) => {
+            e.stopPropagation()
+            // Handle settings click
+            console.log('Settings clicked')
+          }}
         >
-          <Settings className="w-2.5 h-2.5 text-white" />
+          <Settings className="h-3 w-3" />
         </Button>
         <Button
-          variant="ghost"
           size="sm"
-          className="h-5 w-5 p-0 bg-card/90 backdrop-blur-sm hover:bg-muted shadow-sm"
+          variant="outline"
+          className="h-6 w-6 p-0 bg-background/90 backdrop-blur-sm border-border/60 hover:bg-destructive hover:text-destructive-foreground hover:border-destructive"
+          onClick={(e) => {
+            e.stopPropagation()
+            // Handle delete click
+            console.log('Delete clicked')
+          }}
         >
-          <Trash className="w-2.5 h-2.5 text-white" />
+          <Trash className="h-3 w-3" />
         </Button>
       </div>
 
       <Card className={`
         relative w-48 p-4 rounded-lg border transition-all duration-200
-        ${selected ? 'ring-2 ring-ring shadow-lg' : 'shadow-md'}
         bg-card/95 backdrop-blur-sm
         hover:shadow-lg hover:scale-[1.02]
         border-border/50

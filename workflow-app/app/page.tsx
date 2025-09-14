@@ -102,9 +102,13 @@ export default function App() {
   );
 
   return (
-    <div className="w-full h-screen bg-background text-foreground">
+    <div className="w-full h-screen">
       <div className="absolute top-4 right-4 z-10">
         <AnimatedThemeToggler />
+      </div>
+      <div className="size-64">
+        Hello
+
       </div>
       <ReactFlow
         nodes={nodes}
