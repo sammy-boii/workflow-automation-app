@@ -1,103 +1,142 @@
-import Image from "next/image";
+'use client'
 
-export default function Home() {
+import { useState, useCallback } from 'react';
+import { ReactFlow, applyNodeChanges, applyEdgeChanges, addEdge, OnNodesChange, OnEdgesChange, OnConnect, Node, Edge, Background, Controls, MiniMap } from '@xyflow/react';
+import '@xyflow/react/dist/style.css';
+import { nodeTypes } from '@/lib/nodeTypes';
+import type { CustomNodeData } from '@/components/CustomNode';
+
+const initialNodes: Node<CustomNodeData>[] = [
+  {
+    id: 'trigger-1',
+    type: 'customNode',
+    position: { x: 100, y: 100 },
+    data: {
+      label: 'Webhook Trigger',
+      type: 'trigger',
+      description: 'Receives HTTP requests and triggers the workflow',
+      status: 'idle'
+    }
+  },
+  {
+    id: 'action-1',
+    type: 'customNode',
+    position: { x: 400, y: 100 },
+    data: {
+      label: 'Process Data',
+      type: 'action',
+      description: 'Transforms and validates incoming data',
+      status: 'idle'
+    }
+  },
+  {
+    id: 'condition-1',
+    type: 'customNode',
+    position: { x: 700, y: 100 },
+    data: {
+      label: 'Check Condition',
+      type: 'condition',
+      description: 'Evaluates if data meets specific criteria',
+      status: 'idle'
+    }
+  },
+  {
+    id: 'data-1',
+    type: 'customNode',
+    position: { x: 1000, y: 50 },
+    data: {
+      label: 'Save to Database',
+      type: 'data',
+      description: 'Stores processed data in the database',
+      status: 'idle'
+    }
+  },
+  {
+    id: 'webhook-1',
+    type: 'customNode',
+    position: { x: 1000, y: 150 },
+    data: {
+      label: 'Send Notification',
+      type: 'webhook',
+      description: 'Sends notification to external service',
+      status: 'idle'
+    }
+  },
+  {
+    id: 'file-1',
+    type: 'customNode',
+    position: { x: 1000, y: 250 },
+    data: {
+      label: 'Generate Report',
+      type: 'file',
+      description: 'Creates a PDF report of the processed data',
+      status: 'idle'
+    }
+  },
+];
+
+const initialEdges: Edge[] = [
+  { id: 'trigger-action', source: 'trigger-1', target: 'action-1', animated: true },
+  { id: 'action-condition', source: 'action-1', target: 'condition-1', animated: true },
+  { id: 'condition-data', source: 'condition-1', target: 'data-1', animated: true },
+  { id: 'condition-webhook', source: 'condition-1', target: 'webhook-1', animated: true },
+  { id: 'condition-file', source: 'condition-1', target: 'file-1', animated: true },
+];
+
+export default function App() {
+  const [nodes, setNodes] = useState(initialNodes);
+  const [edges, setEdges] = useState(initialEdges);
+
+  const onNodesChange: OnNodesChange = useCallback(
+    (changes) => setNodes((nodesSnapshot) => applyNodeChanges(changes, nodesSnapshot)),
+    [],
+  );
+  const onEdgesChange: OnEdgesChange = useCallback(
+    (changes) => setEdges((edgesSnapshot) => applyEdgeChanges(changes, edgesSnapshot)),
+    [],
+  );
+  const onConnect: OnConnect = useCallback(
+    (params) => setEdges((edgesSnapshot) => addEdge(params, edgesSnapshot)),
+    [],
+  );
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
+    <div className="w-full h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
+        nodeTypes={nodeTypes}
+        fitView
+        className="dark"
+      >
+        <Background
+          color="#374151"
+          gap={20}
+          size={1}
+          className="opacity-30"
         />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        <Controls
+          className="bg-black/20 backdrop-blur-sm border border-white/10"
+        />
+        <MiniMap
+          className="bg-black/20 backdrop-blur-sm border border-white/10"
+          nodeColor={(node) => {
+            const type = (node.data as CustomNodeData)?.type;
+            switch (type) {
+              case 'trigger': return '#10b981';
+              case 'action': return '#3b82f6';
+              case 'condition': return '#f59e0b';
+              case 'data': return '#8b5cf6';
+              case 'webhook': return '#06b6d4';
+              case 'file': return '#64748b';
+              default: return '#6b7280';
+            }
+          }}
+        />
+      </ReactFlow>
     </div>
   );
 }
