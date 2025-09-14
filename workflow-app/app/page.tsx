@@ -3,8 +3,9 @@
 import { useState, useCallback } from 'react';
 import { ReactFlow, applyNodeChanges, applyEdgeChanges, addEdge, OnNodesChange, OnEdgesChange, OnConnect, Node, Edge, Background, Controls, MiniMap } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { nodeTypes } from '@/lib/nodeTypes';
+import { nodeTypes } from '@/types/node.types';
 import type { CustomNodeData } from '@/components/CustomNode';
+import { AnimatedThemeToggler } from '@/components/magicui/animated-theme-toggler';
 
 const initialNodes: Node<CustomNodeData>[] = [
   {
@@ -88,7 +89,7 @@ export default function App() {
   const [edges, setEdges] = useState(initialEdges);
 
   const onNodesChange: OnNodesChange = useCallback(
-    (changes) => setNodes((nodesSnapshot) => applyNodeChanges(changes, nodesSnapshot)),
+    (changes) => setNodes((nodesSnapshot) => applyNodeChanges(changes, nodesSnapshot) as Node<CustomNodeData>[]),
     [],
   );
   const onEdgesChange: OnEdgesChange = useCallback(
@@ -101,7 +102,10 @@ export default function App() {
   );
 
   return (
-    <div className="w-full h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className="w-full h-screen bg-background text-foreground">
+      <div className="absolute top-4 right-4 z-10">
+        <AnimatedThemeToggler />
+      </div>
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -110,19 +114,19 @@ export default function App() {
         onConnect={onConnect}
         nodeTypes={nodeTypes}
         fitView
-        className="dark"
+        className="bg-background"
       >
         <Background
-          color="#374151"
+          color="hsl(var(--muted))"
           gap={20}
           size={1}
           className="opacity-30"
         />
         <Controls
-          className="bg-black/20 backdrop-blur-sm border border-white/10"
+          className="bg-card/80 backdrop-blur-sm border border-border"
         />
         <MiniMap
-          className="bg-black/20 backdrop-blur-sm border border-white/10"
+          className="bg-card/80 backdrop-blur-sm border border-border"
           nodeColor={(node) => {
             const type = (node.data as CustomNodeData)?.type;
             switch (type) {
