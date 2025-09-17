@@ -25,7 +25,6 @@ export default function RootLayout({
       <body className={`${geistSans.variable} antialiased`}>
         <Provider>
           <AppSidebar />
-          <SidebarTrigger />
 
           {children}
         </Provider>

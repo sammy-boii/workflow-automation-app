@@ -1,6 +1,15 @@
 'use client'
 
-import { Calendar, Home, Inbox, Search, Settings, ZapIcon } from 'lucide-react'
+import {
+  Calendar,
+  Home,
+  Inbox,
+  Search,
+  Settings,
+  ZapIcon,
+  PanelRight,
+  PanelLeft
+} from 'lucide-react'
 
 import {
   Sidebar,
@@ -74,17 +83,27 @@ export function AppSidebar() {
 
   return (
     <Sidebar collapsible='icon' className='group'>
-      <SidebarHeader>
+      <SidebarHeader className='relative'>
         <SidebarMenu>
           <SidebarMenuItem>
-            <Link className='flex items-center gap-2 p-2' href='/'>
-              <ZapIcon className='!size-5' />
+            <Link className='flex items-center gap-2 p-2 relative' href='/'>
+              {/* Zap icon only visible when collapsed & not hovered */}
+              <ZapIcon
+                className='
+          !size-5 transition-all duration-300
+          group-data-[state=collapsed]:opacity-100
+          group-data-[state=collapsed]:group-hover:opacity-0
+          group-data-[state=expanded]:opacity-100
+        '
+              />
+              {/* Sidebar title only visible when expanded */}
               <span className='font-bold group-data-[state=expanded]:block hidden'>
                 Acme Inc.
               </span>
             </Link>
           </SidebarMenuItem>
         </SidebarMenu>
+        <SidebarToggle />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
@@ -116,6 +135,27 @@ export function AppSidebar() {
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
+  )
+}
+
+function SidebarToggle() {
+  const { toggleSidebar, open } = useSidebar()
+
+  return (
+    <button
+      onClick={toggleSidebar}
+      className='
+          absolute top-2 right-2 z-10 flex items-center justify-center
+          w-8 h-8 rounded-md
+          transition-all duration-300
+          hover:bg-accent hover:text-accent-foreground
+          group-data-[state=collapsed]:opacity-0
+          group-data-[state=collapsed]:group-hover:opacity-100
+        '
+      aria-label={open ? 'Collapse sidebar' : 'Expand sidebar'}
+    >
+      <PanelLeft className='size-4 transition-transform duration-300 ' />
+    </button>
   )
 }
 
