@@ -1,11 +1,24 @@
 'use client'
 
-import { useState, useCallback } from 'react';
-import { ReactFlow, applyNodeChanges, applyEdgeChanges, addEdge, OnNodesChange, OnEdgesChange, OnConnect, Node, Edge, Background, Controls, MiniMap } from '@xyflow/react';
-import '@xyflow/react/dist/style.css';
-import { nodeTypes } from '@/types/node.types';
-import type { CustomNodeData } from '@/components/CustomNode';
-import { AnimatedThemeToggler } from '@/components/magicui/animated-theme-toggler';
+import { useState, useCallback } from 'react'
+import {
+  ReactFlow,
+  applyNodeChanges,
+  applyEdgeChanges,
+  addEdge,
+  OnNodesChange,
+  OnEdgesChange,
+  OnConnect,
+  Node,
+  Edge,
+  Background,
+  Controls,
+  MiniMap
+} from '@xyflow/react'
+import '@xyflow/react/dist/style.css'
+import { nodeTypes } from '@/types/node.types'
+import type { CustomNodeData } from '@/components/CustomNode'
+import { AnimatedThemeToggler } from '@/components/magicui/animated-theme-toggler'
 
 const initialNodes: Node<CustomNodeData>[] = [
   {
@@ -73,43 +86,70 @@ const initialNodes: Node<CustomNodeData>[] = [
       description: 'Creates a PDF report of the processed data',
       status: 'idle'
     }
-  },
-];
+  }
+]
 
 const initialEdges: Edge[] = [
-  { id: 'trigger-action', source: 'trigger-1', target: 'action-1', animated: true },
-  { id: 'action-condition', source: 'action-1', target: 'condition-1', animated: true },
-  { id: 'condition-data', source: 'condition-1', target: 'data-1', animated: true },
-  { id: 'condition-webhook', source: 'condition-1', target: 'webhook-1', animated: true },
-  { id: 'condition-file', source: 'condition-1', target: 'file-1', animated: true },
-];
+  {
+    id: 'trigger-action',
+    source: 'trigger-1',
+    target: 'action-1',
+    animated: true
+  },
+  {
+    id: 'action-condition',
+    source: 'action-1',
+    target: 'condition-1',
+    animated: true
+  },
+  {
+    id: 'condition-data',
+    source: 'condition-1',
+    target: 'data-1',
+    animated: true
+  },
+  {
+    id: 'condition-webhook',
+    source: 'condition-1',
+    target: 'webhook-1',
+    animated: true
+  },
+  {
+    id: 'condition-file',
+    source: 'condition-1',
+    target: 'file-1',
+    animated: true
+  }
+]
 
 export default function App() {
-  const [nodes, setNodes] = useState(initialNodes);
-  const [edges, setEdges] = useState(initialEdges);
+  const [nodes, setNodes] = useState(initialNodes)
+  const [edges, setEdges] = useState(initialEdges)
 
   const onNodesChange: OnNodesChange = useCallback(
-    (changes) => setNodes((nodesSnapshot) => applyNodeChanges(changes, nodesSnapshot) as Node<CustomNodeData>[]),
-    [],
-  );
+    (changes) =>
+      setNodes(
+        (nodesSnapshot) =>
+          applyNodeChanges(changes, nodesSnapshot) as Node<CustomNodeData>[]
+      ),
+    []
+  )
   const onEdgesChange: OnEdgesChange = useCallback(
-    (changes) => setEdges((edgesSnapshot) => applyEdgeChanges(changes, edgesSnapshot)),
-    [],
-  );
+    (changes) =>
+      setEdges((edgesSnapshot) => applyEdgeChanges(changes, edgesSnapshot)),
+    []
+  )
   const onConnect: OnConnect = useCallback(
     (params) => setEdges((edgesSnapshot) => addEdge(params, edgesSnapshot)),
-    [],
-  );
+    []
+  )
 
   return (
-    <div className="w-full h-screen">
-      <div className="absolute top-4 right-4 z-10">
+    <div className='w-full h-screen'>
+      <div className='absolute top-4 right-4 z-10'>
         <AnimatedThemeToggler />
       </div>
-      <div className="size-64">
-        Hello
 
-      </div>
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -118,33 +158,38 @@ export default function App() {
         onConnect={onConnect}
         nodeTypes={nodeTypes}
         fitView
-        className="bg-background"
+        className='bg-background'
       >
         <Background
-          color="hsl(var(--muted))"
+          color='hsl(var(--muted))'
           gap={20}
           size={1}
-          className="opacity-30"
+          className='opacity-30'
         />
-        <Controls
-          className="bg-card/80 backdrop-blur-sm border border-border"
-        />
+        <Controls className='bg-card/80 backdrop-blur-sm border border-border' />
         <MiniMap
-          className="bg-card/80 backdrop-blur-sm border border-border"
+          className='bg-card/80 backdrop-blur-sm border border-border'
           nodeColor={(node) => {
-            const type = (node.data as CustomNodeData)?.type;
+            const type = (node.data as CustomNodeData)?.type
             switch (type) {
-              case 'trigger': return '#10b981';
-              case 'action': return '#3b82f6';
-              case 'condition': return '#f59e0b';
-              case 'data': return '#8b5cf6';
-              case 'webhook': return '#06b6d4';
-              case 'file': return '#64748b';
-              default: return '#6b7280';
+              case 'trigger':
+                return '#10b981'
+              case 'action':
+                return '#3b82f6'
+              case 'condition':
+                return '#f59e0b'
+              case 'data':
+                return '#8b5cf6'
+              case 'webhook':
+                return '#06b6d4'
+              case 'file':
+                return '#64748b'
+              default:
+                return '#6b7280'
             }
           }}
         />
       </ReactFlow>
     </div>
-  );
+  )
 }
