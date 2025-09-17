@@ -1,6 +1,6 @@
 'use client'
 
-import { Calendar, Home, Inbox, Search, Settings } from 'lucide-react'
+import { Calendar, Home, Inbox, Search, Settings, ZapIcon } from 'lucide-react'
 
 import {
   Sidebar,
@@ -9,9 +9,11 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
+  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarRail,
   useSidebar
 } from '@/components/ui/sidebar'
 import Link from 'next/link'
@@ -71,7 +73,19 @@ export function AppSidebar() {
   const pathName = usePathname()
 
   return (
-    <Sidebar collapsible='icon'>
+    <Sidebar collapsible='icon' className='group'>
+      <SidebarHeader>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <Link className='flex items-center gap-2 p-2' href='/'>
+              <ZapIcon className='!size-5' />
+              <span className='font-bold group-data-[state=expanded]:block hidden'>
+                Acme Inc.
+              </span>
+            </Link>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>Application</SidebarGroupLabel>
@@ -100,6 +114,7 @@ export function AppSidebar() {
           }}
         />
       </SidebarFooter>
+      <SidebarRail />
     </Sidebar>
   )
 }
@@ -120,11 +135,8 @@ function NavUser({
       <SidebarMenuItem>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <SidebarMenuButton
-              size='lg'
-              className='data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground'
-            >
-              <Avatar className='h-8 w-8 rounded-lg'>
+            <SidebarMenuButton size='lg'>
+              <Avatar className='h-8 w-8 rounded-lg grayscale'>
                 <AvatarImage src={user.avatar} alt={user.name} />
                 <AvatarFallback className='rounded-lg'>CN</AvatarFallback>
               </Avatar>
