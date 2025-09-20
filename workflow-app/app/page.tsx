@@ -160,15 +160,9 @@ export default function App() {
         fitView
         className='bg-background'
       >
-        <Background
-          color='hsl(var(--muted))'
-          gap={20}
-          size={1}
-          className='opacity-30'
-        />
-        <Controls className='bg-card/80 backdrop-blur-sm border border-border' />
+        <Background gap={40} />
+        <Controls />
         <MiniMap
-          className='bg-card/80 backdrop-blur-sm border border-border'
           nodeColor={(node) => {
             const type = (node.data as CustomNodeData)?.type
             switch (type) {

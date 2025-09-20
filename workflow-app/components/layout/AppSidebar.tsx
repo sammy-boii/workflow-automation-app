@@ -7,7 +7,6 @@ import {
   Search,
   Settings,
   ZapIcon,
-  PanelRight,
   PanelLeft
 } from 'lucide-react'
 
@@ -48,6 +47,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
+import { TooltipTrigger } from '@radix-ui/react-tooltip'
+import { TooltipContent } from '../ui/tooltip'
+import { Badge } from '../ui/badge'
 
 // Menu items.
 const items = [
@@ -154,7 +156,13 @@ function SidebarToggle() {
         '
       aria-label={open ? 'Collapse sidebar' : 'Expand sidebar'}
     >
-      <PanelLeft className='size-4 transition-transform duration-300 ' />
+      <TooltipTrigger asChild>
+        <PanelLeft className='size-4 transition-transform duration-300 ' />
+      </TooltipTrigger>
+      <TooltipContent className='flex items-center gap-1'>
+        <div>Ctrl</div>
+        <div>B</div>
+      </TooltipContent>
     </button>
   )
 }

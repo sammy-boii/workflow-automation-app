@@ -2,6 +2,7 @@
 
 import { ThemeProvider } from '@/components/theme-provider'
 import { SidebarProvider } from '@/components/ui/sidebar'
+import { Tooltip } from '@/components/ui/tooltip'
 
 export default function Provider({ children }: { children: React.ReactNode }) {
   return (
@@ -12,7 +13,9 @@ export default function Provider({ children }: { children: React.ReactNode }) {
         enableSystem
         disableTransitionOnChange
       >
-        <SidebarProvider>{children}</SidebarProvider>
+        <Tooltip>
+          <SidebarProvider>{children}</SidebarProvider>
+        </Tooltip>
       </ThemeProvider>
     </>
   )
