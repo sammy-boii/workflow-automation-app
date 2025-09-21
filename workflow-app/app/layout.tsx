@@ -4,6 +4,7 @@ import './globals.css'
 import Provider from '@/lib/provider'
 import { SidebarTrigger } from '@/components/ui/sidebar'
 import { AppSidebar } from '@/components/layout/AppSidebar'
+import { AnimatedThemeToggler } from '@/components/magicui/animated-theme-toggler'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -25,6 +26,9 @@ export default function RootLayout({
       <body className={`${geistSans.variable} antialiased`}>
         <Provider>
           <AppSidebar />
+             <div className='absolute top-4 right-4 z-10'>
+        <AnimatedThemeToggler />
+      </div>
 
           {children}
         </Provider>
