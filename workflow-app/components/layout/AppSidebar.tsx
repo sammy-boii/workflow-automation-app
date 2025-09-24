@@ -25,7 +25,7 @@ import {
   useSidebar
 } from '@/components/ui/sidebar'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 
 import {
   BadgeCheck,
@@ -49,7 +49,8 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { TooltipTrigger } from '@radix-ui/react-tooltip'
 import { TooltipContent } from '../ui/tooltip'
-import { Badge } from '../ui/badge'
+import { logout } from '@/actions/auth.actions'
+import { toast } from 'sonner'
 
 // Menu items.
 const items = [
@@ -178,6 +179,8 @@ function NavUser({
 }) {
   const { isMobile } = useSidebar()
 
+  const router = useRouter()
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -236,7 +239,13 @@ function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                logout()
+                toast.success('Logged out successfully')
+                router.replace('/login')
+              }}
+            >
               <LogOut />
               Log out
             </DropdownMenuItem>

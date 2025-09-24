@@ -37,7 +37,10 @@ export async function signUp(data: TSignUpForm) {
 export async function login(data: TLoginForm) {
   return tryCatch(async () => {
     const user = await prisma.user.findUnique({
-      where: { email: data.email }
+      where: { email: data.email },
+      omit: {
+        password: false // select works too but u have to select all fields u need
+      }
     })
 
     if (!user) {
@@ -52,7 +55,8 @@ export async function login(data: TLoginForm) {
 
     const token = jwt.sign(
       {
-        id: user.id
+        id: user.id,
+        email: user.email
       },
       process.env.JWT_SECRET as string,
       { expiresIn: '7d' }
@@ -67,4 +71,9 @@ export async function login(data: TLoginForm) {
 
     return user
   })
+}
+
+export async function logout() {
+  const cookieStore = await cookies()
+  cookieStore.delete('token')
 }
