@@ -15,11 +15,48 @@ import { ZapIcon } from 'lucide-react'
 import { MdLock } from 'react-icons/md'
 import { IoIosMail } from 'react-icons/io'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
-import { useState } from 'react'
+import { useState, useTransition } from 'react'
+import { z } from 'zod'
 import { LuLogIn } from 'react-icons/lu'
+import { toast } from 'sonner'
+import { loginSchema } from '@/schema/auth.schema'
+import { TLoginForm } from '@/types/auth.types'
+import { login } from '@/actions/auth.actions'
+import { useRouter } from 'next/navigation'
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
+
+  const router = useRouter()
+
+  const [credentials, setCredentials] = useState<TLoginForm>({
+    email: '',
+    password: ''
+  })
+
+  const [isPending, startTransition] = useTransition()
+
+  async function handleSubmit(evt: React.FormEvent<HTMLFormElement>) {
+    evt.preventDefault()
+
+    const parsedCredentials = loginSchema.safeParse(credentials)
+
+    if (!parsedCredentials.success) {
+      return toast.error('Invalid credentials')
+    }
+
+    startTransition(async () => {
+      const { error } = await login(parsedCredentials.data)
+
+      if (error) {
+        toast.error(error.message)
+        return
+      }
+
+      toast.success('Logged in successfully')
+      router.replace('/')
+    })
+  }
 
   return (
     <div className={'flex max-w-md w-full flex-col gap-6'}>
@@ -32,7 +69,7 @@ export default function LoginPage() {
           <CardDescription>Login with your email and password</CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className='grid gap-4'>
               <div className='grid gap-4'>
                 <div className='grid group relative gap-3'>
@@ -42,6 +79,13 @@ export default function LoginPage() {
                   />
                   <Label htmlFor='email'>Email</Label>
                   <Input
+                    onChange={(evt) =>
+                      setCredentials((prev) => ({
+                        ...prev,
+                        email: evt.target.value
+                      }))
+                    }
+                    value={credentials.email}
                     id='email'
                     type='email'
                     className='pl-10'
@@ -76,6 +120,12 @@ export default function LoginPage() {
                     </Link>
                   </div>
                   <Input
+                    onChange={(evt) => {
+                      setCredentials((prev) => ({
+                        ...prev,
+                        password: evt.target.value
+                      }))
+                    }}
                     placeholder='Enter your password'
                     className='pl-10'
                     id='password'
@@ -84,6 +134,7 @@ export default function LoginPage() {
                   />
                 </div>
                 <Button
+                  disabled={isPending}
                   type='submit'
                   className='w-full flex gap-2 items-center'
                 >

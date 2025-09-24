@@ -32,29 +32,9 @@ import { ZapIcon } from 'lucide-react'
 import { LuLogIn } from 'react-icons/lu'
 import { MdLock } from 'react-icons/md'
 import { IoIosMail } from 'react-icons/io'
-
-const signupFormSchema = z
-  .object({
-    username: z.string().min(1, 'Username is required'),
-    email: z.email(),
-    password: z
-      .string()
-      .min(12, 'Password must match the following criteria:')
-      .regex(/[A-Z]/, 'Must contain at least one uppercase letter')
-      .regex(/[a-z]/, 'Must contain at least one lowercase letter')
-      .regex(/\d/, 'Must contain at least one number')
-      .regex(
-        /[!@#$%^&*(),.?":{}|<>]/,
-        'Must contain at least one special character'
-      ),
-    confirmPassword: z.string()
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: 'Passwords must match',
-    path: ['confirmPassword']
-  })
-
-type TSignUpForm = z.infer<typeof signupFormSchema>
+import { signupFormSchema } from '@/schema/auth.schema'
+import { TSignUpForm } from '@/types/auth.types'
+import { signUp } from '@/actions/auth.actions'
 
 const SignUpPage = () => {
   const router = useRouter()
@@ -62,20 +42,30 @@ const SignUpPage = () => {
   const form = useForm<TSignUpForm>({
     resolver: zodResolver(signupFormSchema),
     defaultValues: {
-      username: '',
+      name: '',
       email: '',
       password: '',
       confirmPassword: ''
     }
   })
 
-  async function onSubmit(formData: TSignUpForm) {}
+  async function onSubmit(formData: TSignUpForm) {
+    const { error } = await signUp(formData)
+
+    if (error) {
+      toast.error(error.message)
+      return
+    }
+
+    toast.success('Account created successfully')
+    router.push('/login')
+  }
 
   const [showPassword, setShowPassword] = useState(false)
   const passwordError = form.formState.errors.password
 
   return (
-    <Card className='max-w-md w-full mx-auto'>
+    <Card className='max-w-md w-full mt-12 mx-auto'>
       <CardHeader>
         <div className='flex items-center gap-4'>
           <ZapIcon className='size-6' />
@@ -91,7 +81,7 @@ const SignUpPage = () => {
           <form className='space-y-4' onSubmit={form.handleSubmit(onSubmit)}>
             <FormField
               control={form.control}
-              name='username'
+              name='name'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Name</FormLabel>
@@ -163,14 +153,18 @@ const SignUpPage = () => {
                       </Button>
                     </div>
                   </FormControl>
-                  <FormMessage />
                 </FormItem>
               )}
             />
 
-            {passwordError && (
+            <div
+              className={cn('duration-300 transition-all', {
+                'h-0 overflow-hidden opacity-0': !passwordError,
+                'h-36 opacity-100': passwordError
+              })}
+            >
               <PasswordCriteria password={form.watch('password')} />
-            )}
+            </div>
 
             <FormField
               control={form.control}
@@ -258,6 +252,9 @@ function PasswordCriteria({ password }: { password: string }) {
   ]
   return (
     <div className='mt-2 space-y-1 text-sm text-muted-foreground'>
+      <div className='pb-1 text-red-400 -translate-y-1'>
+        Password must match the following criteria:
+      </div>
       {criteria.map((item, index) => (
         <div key={index} className='flex items-center gap-3'>
           <div
