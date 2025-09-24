@@ -51,6 +51,7 @@ import { TooltipTrigger } from '@radix-ui/react-tooltip'
 import { TooltipContent } from '../ui/tooltip'
 import { logout } from '@/actions/auth.actions'
 import { toast } from 'sonner'
+import { useGetProfile } from '@/hooks/use-user'
 
 // Menu items.
 const items = [
@@ -83,6 +84,8 @@ const items = [
 
 export function AppSidebar() {
   const pathName = usePathname()
+
+  const { data } = useGetProfile()
 
   return (
     <Sidebar collapsible='icon' className='group'>
@@ -130,9 +133,9 @@ export function AppSidebar() {
       <SidebarFooter>
         <NavUser
           user={{
-            name: 'Test',
-            email: 'test@gmail.com',
-            avatar: 'https://github.com/shadcn.png'
+            name: data?.data?.name || 'Anonymous',
+            email: data?.data?.email || 'm@example.com',
+            avatar: data?.data?.avatar || 'https://github.com/shadcn.png'
           }}
         />
       </SidebarFooter>
