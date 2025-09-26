@@ -1,5 +1,6 @@
 import { AppSidebar } from '@/components/layout/AppSidebar'
 import { AnimatedThemeToggler } from '@/components/magicui/animated-theme-toggler'
+import '@xyflow/react/dist/style.css'
 
 export default function MainLayout({
   children
