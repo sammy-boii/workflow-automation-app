@@ -7,7 +7,9 @@ import {
   applyEdgeChanges,
   applyNodeChanges,
   addEdge,
-  Edge
+  Edge,
+  EdgeTypes,
+  ConnectionLineType
 } from '@xyflow/react'
 
 import type {
@@ -61,7 +63,26 @@ export default function App() {
     [setEdges]
   )
   const onConnect: OnConnect = useCallback(
-    (connection) => setEdges((eds) => addEdge(connection, eds)),
+    (connection) =>
+      setEdges((eds) =>
+        addEdge(
+          {
+            ...connection,
+            type: 'smoothstep',
+            style: {
+              strokeWidth: 2,
+              stroke: '#9ca3af'
+            },
+            markerEnd: {
+              type: 'arrowclosed',
+              color: '#9ca3af',
+              width: 12,
+              height: 12
+            }
+          },
+          eds
+        )
+      ),
     [setEdges]
   )
 
@@ -76,14 +97,27 @@ export default function App() {
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         nodes={nodes}
+        edges={edges}
         nodeTypes={nodeTypes}
         className='bg-background'
+        connectionLineType={ConnectionLineType.Bezier}
+        defaultEdgeOptions={{
+          type: 'smoothstep',
+          style: {
+            strokeWidth: 2,
+            stroke: '#9ca3af'
+          },
+          markerEnd: {
+            type: 'arrowclosed',
+            color: '#9ca3af',
+            width: 12,
+            height: 12
+          }
+        }}
+        fitView
       >
         <Background gap={40} />
       </ReactFlow>
     </div>
   )
-}
-function setNodes(arg0: (nds: any) => Node[]): any {
-  throw new Error('Function not implemented.')
 }
