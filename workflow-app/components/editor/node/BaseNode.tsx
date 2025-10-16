@@ -8,37 +8,21 @@ import { Settings, Trash2 } from 'lucide-react'
 import Image, { StaticImageData } from 'next/image'
 import React, { useState } from 'react'
 import { BaseNodeProps } from '@/types/node.types'
-import { GmailSettingsSheet } from '../GmailSettingsSheet'
-import { GoogleDriveSettingsSheet } from '../GoogleDriveSettingsSheet'
-import { CUSTOM_NODE_TYPES } from '@/constants'
+import { GmailSettingsSheet } from '../custom-nodes/gmail/GmailSettingsSheet'
+import { GoogleDriveSettingsSheet } from '../custom-nodes/google-drive/GoogleDriveSettingsSheet'
+import { NODE_TYPES } from '@/constants'
+import { NODE_DEFINITIONS } from '@/constants/registry'
 
 export function BaseNode({ data, id }: NodeProps<BaseNodeProps>) {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
-
-  const renderIcon = () => {
-    if (React.isValidElement(data.icon)) {
-      return data.icon
-    }
-    if (data.icon && typeof data.icon === 'object') {
-      return (
-        <Image
-          src={data.icon as StaticImageData}
-          alt={data.label}
-          width={24}
-          height={24}
-        />
-      )
-    }
-  }
 
   const handleSettingsClick = () => {
     setIsSettingsOpen(true)
   }
 
-  const handleSaveConfiguration = (nodeId: string, config: any) => {
-    console.log('Saving configuration for node:', nodeId, config)
-    // TODO: Implement actual save logic
-  }
+  const node = NODE_DEFINITIONS[data.type]
+
+  const handleSaveConfiguration = (nodeId: string, config: any) => {}
 
   return (
     <div className='relative group'>
@@ -76,11 +60,14 @@ export function BaseNode({ data, id }: NodeProps<BaseNodeProps>) {
       aspect-square relative overflow-hidden
     `}
           >
-            <div className='relative z-10'>{renderIcon()}</div>
+            <div className='relative z-10'>
+              {' '}
+              <Image src={node.icon} alt={node.label} width={24} height={24} />
+            </div>
           </div>
           <div className='flex-1 min-w-0'>
             <h3 className='font-semibold text-sm text-foreground truncate'>
-              {data.label}
+              {node.label}
             </h3>
             <p className='text-xs text-muted-foreground capitalize font-medium'>
               Action
@@ -110,32 +97,6 @@ export function BaseNode({ data, id }: NodeProps<BaseNodeProps>) {
           }}
         />
       </Card>
-
-      {data.type === CUSTOM_NODE_TYPES.GMAIL ? (
-        <GmailSettingsSheet
-          isOpen={isSettingsOpen}
-          onClose={() => setIsSettingsOpen(false)}
-          node={{
-            id,
-            label: data.label,
-            type: data.type,
-            icon: data.icon
-          }}
-          onSave={handleSaveConfiguration}
-        />
-      ) : data.type === CUSTOM_NODE_TYPES.GOOGLE_DRIVE ? (
-        <GoogleDriveSettingsSheet
-          isOpen={isSettingsOpen}
-          onClose={() => setIsSettingsOpen(false)}
-          node={{
-            id,
-            label: data.label,
-            type: data.type,
-            icon: data.icon
-          }}
-          onSave={handleSaveConfiguration}
-        />
-      ) : null}
     </div>
   )
 }

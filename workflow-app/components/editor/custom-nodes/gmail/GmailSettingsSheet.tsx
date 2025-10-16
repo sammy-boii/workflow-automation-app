@@ -24,6 +24,7 @@ import {
 import { ChevronRight, Check, Mail, Search } from 'lucide-react'
 import Image from 'next/image'
 import gmailIcon from '@/public/gmail.png'
+import { GMAIL_ACTIONS } from './GmailActions'
 
 interface GmailSettingsSheetProps {
   isOpen: boolean
@@ -36,82 +37,6 @@ interface GmailSettingsSheetProps {
   }
   onSave: (nodeId: string, config: any) => void
 }
-
-const GMAIL_ACTIONS = [
-  {
-    id: 'send_email',
-    name: 'Send Email',
-    description: 'Send an email through Gmail',
-    icon: <Mail className='h-5 w-5' />,
-    fields: [
-      {
-        id: 'to',
-        name: 'to',
-        type: 'email',
-        label: 'To',
-        placeholder: 'recipient@example.com',
-        required: true
-      },
-      {
-        id: 'subject',
-        name: 'subject',
-        type: 'text',
-        label: 'Subject',
-        placeholder: 'Email subject',
-        required: true
-      },
-      {
-        id: 'body',
-        name: 'body',
-        type: 'textarea',
-        label: 'Message Body',
-        placeholder: 'Enter your message here...',
-        required: true
-      },
-      {
-        id: 'priority',
-        name: 'priority',
-        type: 'select',
-        label: 'Priority',
-        options: [
-          { value: 'normal', label: 'Normal' },
-          { value: 'high', label: 'High' },
-          { value: 'low', label: 'Low' }
-        ],
-        defaultValue: 'normal'
-      }
-    ]
-  },
-  {
-    id: 'read_emails',
-    name: 'Read Emails',
-    description: 'Read emails from Gmail inbox',
-    icon: <Search className='h-5 w-5' />,
-    fields: [
-      {
-        id: 'query',
-        name: 'query',
-        type: 'text',
-        label: 'Search Query',
-        placeholder: 'is:unread from:example@email.com'
-      },
-      {
-        id: 'max_results',
-        name: 'max_results',
-        type: 'number',
-        label: 'Max Results',
-        defaultValue: 10
-      },
-      {
-        id: 'include_attachments',
-        name: 'include_attachments',
-        type: 'boolean',
-        label: 'Include Attachments',
-        defaultValue: false
-      }
-    ]
-  }
-]
 
 export function GmailSettingsSheet({
   isOpen,
@@ -264,30 +189,34 @@ export function GmailSettingsSheet({
                 </p>
               </div>
               <div className='space-y-3'>
-                {GMAIL_ACTIONS.map((action) => (
-                  <div
-                    key={action.id}
-                    className='group cursor-pointer rounded-lg border border-border bg-card p-4 transition-all hover:bg-accent hover:shadow-md'
-                    onClick={() => handleActionSelect(action)}
-                  >
-                    <div className='flex items-center justify-between'>
-                      <div className='flex items-center gap-3 flex-1'>
-                        <div className='p-1.5 rounded-md bg-primary/10 text-primary'>
-                          {action.icon}
+                {GMAIL_ACTIONS.map((action) => {
+                  const Icon = action.icon
+                  return (
+                    <div
+                      key={action.id}
+                      className='group cursor-pointer rounded-lg border border-border bg-card p-4 transition-all hover:bg-accent hover:shadow-md'
+                      onClick={() => handleActionSelect(action)}
+                    >
+                      <div className='flex items-center justify-between'>
+                        <div className='flex items-center gap-3 flex-1'>
+                          <div className='p-1.5 rounded-md bg-primary/10 text-primary'>
+                            \
+                            <Icon className='h-5 w-5' />
+                          </div>
+                          <div className='flex-1'>
+                            <h4 className='font-medium text-sm text-foreground group-hover:text-accent-foreground'>
+                              {action.label}
+                            </h4>
+                            <p className='text-xs text-muted-foreground mt-0.5'>
+                              {action.description}
+                            </p>
+                          </div>
                         </div>
-                        <div className='flex-1'>
-                          <h4 className='font-medium text-sm text-foreground group-hover:text-accent-foreground'>
-                            {action.name}
-                          </h4>
-                          <p className='text-xs text-muted-foreground mt-0.5'>
-                            {action.description}
-                          </p>
-                        </div>
+                        <ChevronRight className='h-4 w-4 text-muted-foreground group-hover:text-accent-foreground' />
                       </div>
-                      <ChevronRight className='h-4 w-4 text-muted-foreground group-hover:text-accent-foreground' />
                     </div>
-                  </div>
-                ))}
+                  )
+                })}
               </div>
             </div>
           ) : (

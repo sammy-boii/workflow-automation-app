@@ -22,9 +22,7 @@ import type {
 
 import { nodeTypes } from '@/types/node.types'
 
-import gmailIcon from '@/public/gmail.png'
-import driveIcon from '@/public/google-drive.png'
-import { CUSTOM_NODE_TYPES } from '@/constants'
+import { NODE_TYPES } from '@/constants'
 
 export default function App() {
   const initialNodes: Node[] = [
@@ -33,9 +31,7 @@ export default function App() {
       type: 'custom_node',
       position: { x: 280, y: 160 },
       data: {
-        type: CUSTOM_NODE_TYPES.GOOGLE_DRIVE,
-        label: 'Google Drive',
-        icon: driveIcon
+        type: NODE_TYPES.GOOGLE_DRIVE
       }
     },
 
@@ -44,9 +40,7 @@ export default function App() {
       type: 'custom_node',
       position: { x: 480, y: 160 },
       data: {
-        type: CUSTOM_NODE_TYPES.GMAIL,
-        label: 'Gmail',
-        icon: gmailIcon
+        type: NODE_TYPES.GMAIL
       }
     }
   ]
