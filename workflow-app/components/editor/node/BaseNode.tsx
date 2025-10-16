@@ -4,37 +4,21 @@ import { Handle, Position, NodeProps } from '@xyflow/react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 
-import { Settings, Trash2 } from 'lucide-react'
-import Image, { StaticImageData } from 'next/image'
+import { Trash2 } from 'lucide-react'
+import Image from 'next/image'
 import React, { useState } from 'react'
 import { BaseNodeProps } from '@/types/node.types'
-import { GmailSettingsSheet } from '../custom-nodes/gmail/GmailSettingsSheet'
-import { GoogleDriveSettingsSheet } from '../custom-nodes/google-drive/GoogleDriveSettingsSheet'
-import { NODE_TYPES } from '@/constants'
 import { NODE_DEFINITIONS } from '@/constants/registry'
 
+import { NodeActionsSheet } from './NodeActionsSheet'
+
 export function BaseNode({ data, id }: NodeProps<BaseNodeProps>) {
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
-
-  const handleSettingsClick = () => {
-    setIsSettingsOpen(true)
-  }
-
   const node = NODE_DEFINITIONS[data.type]
-
-  const handleSaveConfiguration = (nodeId: string, config: any) => {}
 
   return (
     <div className='relative group'>
       <div className='absolute -top-5 right-0 z-10 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 items-center'>
-        <Button
-          size='sm'
-          variant='outline'
-          className='h-6 w-6 p-0 bg-background/90 backdrop-blur-sm border-border/60 hover:bg-accent'
-          onClick={handleSettingsClick}
-        >
-          <Settings className='h-3.5 w-3.5' />
-        </Button>
+        <NodeActionsSheet node={node} />
         <Button
           size='sm'
           variant='outline'

@@ -17,12 +17,14 @@ export interface NodeAction {
 // the key for NodeDefinition must be a key of NODE_TYPES
 
 export type NodeDefinition = {
-  [key in keyof typeof NODE_TYPES]: {
-    label: string
-    description: string
-    actions: NodeAction[]
-    icon: StaticImageData
-  }
+  [key in keyof typeof NODE_TYPES]: SingleNodeDefinition
+}
+
+export type SingleNodeDefinition = {
+  label: string
+  description: string
+  actions: NodeAction[]
+  icon: StaticImageData
 }
 
 export type BaseNodeProps = Node<{

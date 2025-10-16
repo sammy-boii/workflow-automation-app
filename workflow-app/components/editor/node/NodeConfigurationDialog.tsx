@@ -1,22 +1,40 @@
 'use client'
 
-import React from 'react'
+import { NodeAction } from '@/types/node.types'
+import React, { useEffect, useState } from 'react'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle
+} from '@/components/ui/dialog'
 
-const NodeConfigurationDialog = () => {
+const NodeConfigurationDialog = ({
+  action,
+  isOpen,
+  setIsOpen
+}: {
+  action: NodeAction
+  isOpen: boolean
+  setIsOpen: React.Dispatch<boolean>
+}) => {
   return (
-    <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center'>
-      <div className='bg-white rounded-lg p-4'>
-        <h2 className='text-2xl font-bold'>Node Configuration</h2>
-        <div className='flex flex-col gap-2'>
-          <label htmlFor='name'>Name</label>
-          <input
-            type='text'
-            id='name'
-            className='border border-gray-300 rounded-md p-2'
-          />
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>{action.label}</DialogTitle>
+          <DialogDescription>{action.description}</DialogDescription>
+        </DialogHeader>
+
+        <div className='mt-4'>
+          <p>
+            This is where you can configure or confirm the action{' '}
+            <strong>{action.label}</strong>.
+          </p>
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   )
 }
 
