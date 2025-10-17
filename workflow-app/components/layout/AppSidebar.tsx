@@ -52,6 +52,7 @@ import { TooltipContent } from '../ui/tooltip'
 import { logout } from '@/actions/auth.actions'
 import { toast } from 'sonner'
 import { useGetProfile } from '@/hooks/use-user'
+import { Kbd } from '../ui/kbd'
 
 // Menu items.
 const items = [
@@ -163,9 +164,8 @@ function SidebarToggle() {
       <TooltipTrigger asChild>
         <PanelLeft className='size-4 transition-transform duration-300 ' />
       </TooltipTrigger>
-      <TooltipContent className='flex items-center gap-1'>
-        <div>Ctrl</div>
-        <div>B</div>
+      <TooltipContent className='bg-muted'>
+        <Kbd className='!bg-transparent !text-foreground'>Ctrl + B</Kbd>
       </TooltipContent>
     </button>
   )
