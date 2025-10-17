@@ -1,44 +1,64 @@
 import { Hono } from 'hono'
 import { BACKEND_BASE_URL } from '../lib/constants'
+import { googleAuth } from '@hono/oauth-providers/google'
 
 const authRoutes = new Hono()
 
-authRoutes.get('/google', async (c) => {
-  try {
-    const state = crypto.randomUUID() // CSRF protection
+// handles both /google and /google/callback
+authRoutes.use(
+  '/google/*',
+  googleAuth({
+    client_id: Bun.env.GOOGLE_CLIENT_ID,
+    client_secret: Bun.env.GOOGLE_CLIENT_SECRET,
+    redirect_uri: `${BACKEND_BASE_URL}/api/auth/google/callback`,
+    scope: ['openid', 'email', 'profile']
+  })
+)
 
-    const googleAuthUrl = new URL(
-      'https://accounts.google.com/o/oauth2/v2/auth'
-    )
-    googleAuthUrl.searchParams.append(
-      'client_id',
-      process.env.GOOGLE_CLIENT_ID as string
-    )
-    googleAuthUrl.searchParams.append(
-      'redirect_uri',
-      `${BACKEND_BASE_URL}/api/auth/google/callback`
-    )
-    googleAuthUrl.searchParams.append('response_type', 'code')
-    googleAuthUrl.searchParams.append('scope', 'openid email profile')
-    googleAuthUrl.searchParams.append('state', state)
-    googleAuthUrl.searchParams.append('access_type', 'offline')
-    googleAuthUrl.searchParams.append('prompt', 'consent')
+// runs after successful authentication
+authRoutes.get('/google/callback', (c) => {
+  const user = c.get('user-google')
 
-    return c.redirect(googleAuthUrl.toString())
-  } catch (error) {
+  if (!user) {
     return c.json(
       {
-        success: false,
-        message: 'Failed to initiate Google OAuth',
-        error: error instanceof Error ? error.message : 'Unknown error'
+        message: 'Unauthorized',
+        error: 'No user found'
       },
-      500
+      401
     )
   }
+
+  console.log(
+    c.get('granted-scopes'),
+    c.get('token'),
+    c.get('user-google'),
+    c.get('refresh-token')
+  )
+
+  return c.json({
+    message: 'Successfully authenticated with Google',
+    user: {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      picture: user.picture
+    }
+  })
 })
 
-authRoutes.post('/google/callback', (c) => {
-  return c.json({ message: 'Hello from auth routes' })
+authRoutes.get('/google/callback', (c) => {
+  const token = c.get('token')
+  const grantedScopes = c.get('granted-scopes')
+  const user = c.get('user-google')
+
+  console.log(token, grantedScopes, user)
+
+  return c.json({
+    token,
+    grantedScopes,
+    user
+  })
 })
 
 export default authRoutes
