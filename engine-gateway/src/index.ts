@@ -1,10 +1,11 @@
 import { Hono } from 'hono'
-
-const app = new Hono()
+import { routes } from './routes'
 
 const PORT = process.env.PORT
 
-app.get('/', (c) => c.text('Hello from Bun + Hono!'))
+export const app = new Hono()
+
+app.route('/api', routes)
 
 Bun.serve({
   fetch: app.fetch,
