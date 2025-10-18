@@ -1,0 +1,15 @@
+node_modules
+
+/backend/node_modules
+/backend/.env
+
+/frontend/node_modules
+/frontend/.next/
+/frontend/.env
+
+/shared/node_modules
+
+/frontend/next-env.d.ts
+
+
+/shared/lib/generated/prisma
