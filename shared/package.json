@@ -1,7 +1,12 @@
 {
-  "name": "@myproject/shared",
-  "version": "1.0.0",
-  "main": "./src/index.ts",
-  "types": "./src/index.ts",
-  "type": "module"
+  "name": "shared",
+  "version": "0.1.0",
+  "dependencies": {
+    "@prisma/client": "^6.17.1",
+    "dotenv": "^17.2.3",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "prisma": "^6.17.1"
+  }
 }
