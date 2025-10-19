@@ -22,4 +22,25 @@ model User {
   password        String
   avatar          String?
   isEmailVerified Boolean    @default(false)
+
+  credentials OAuthCredential[]
+}
+
+model OAuthCredential {
+  id String @id @default(cuid())
+  userId String
+  user User @relation(fields: [userId], references: [id])
+  
+  provider String
+  service String?
+  
+  accessToken String
+  refreshToken String?
+  expiresAt DateTime?
+  scopes String[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([provider, service, userId])
 }

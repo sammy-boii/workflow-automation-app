@@ -2,8 +2,6 @@ import { Hono } from 'hono'
 
 import { routes } from './routes'
 
-import { TUserHaha } from '@shared'
-
 const PORT = Bun.env.PORT // process works too
 
 export const app = new Hono()

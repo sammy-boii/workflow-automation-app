@@ -1,12 +1,13 @@
 import { Hono } from 'hono'
-import { BACKEND_BASE_URL } from '../lib/constants'
+import { BACKEND_BASE_URL } from '../../lib/constants'
 import { googleAuth } from '@hono/oauth-providers/google'
 
-const authRoutes = new Hono()
+export const gmailOAuthRoutes = new Hono()
 
-// handles both /google and /google/callback
-authRoutes.use(
-  '/google/*',
+// handles both /oauth and /oauth/callback
+
+gmailOAuthRoutes.use(
+  '/*',
   googleAuth({
     client_id: Bun.env.GOOGLE_CLIENT_ID,
     client_secret: Bun.env.GOOGLE_CLIENT_SECRET,
@@ -23,9 +24,7 @@ authRoutes.use(
   })
 )
 
-// https://gmail.googleapis.com/gmail/v1/users/102739137290115770903/history?startHistoryId=6146
-
-authRoutes.get('/test', async (c) => {
+gmailOAuthRoutes.get('/test', async (c) => {
   const res = await fetch(
     'https://gmail.googleapis.com/gmail/v1/users/102739137290115770903/messages',
     {
@@ -43,7 +42,7 @@ authRoutes.get('/test', async (c) => {
 })
 
 // runs after successful authentication
-authRoutes.get('/google/callback', (c) => {
+gmailOAuthRoutes.get('/callback', (c) => {
   const user = c.get('user-google')
 
   if (!user) {
@@ -74,7 +73,7 @@ authRoutes.get('/google/callback', (c) => {
   })
 })
 
-authRoutes.get('/google/callback', (c) => {
+gmailOAuthRoutes.get('/callback', (c) => {
   const token = c.get('token')
   const grantedScopes = c.get('granted-scopes')
   const user = c.get('user-google')
@@ -87,5 +86,3 @@ authRoutes.get('/google/callback', (c) => {
     user
   })
 })
-
-export default authRoutes
