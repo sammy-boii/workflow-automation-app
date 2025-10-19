@@ -1,15 +1,16 @@
 {
   "name": "flux-monorepo",
   "private": true,
+  "scripts": {
+    "dev:frontend": "bun -F frontend dev",
+    "dev:backend": "bun -F backend dev",
+    "build:frontend": "bun -F frontend build",
+    "build:backend": "bun -F backend build",
+    "dev": "bun -F '*' dev"
+  },
   "workspaces": [
     "shared",
     "frontend",
     "backend"
-  ],
-  "scripts": {
-    "dev:frontend": "cd frontend && bun run dev",
-    "dev:backend": "cd backend && bun run dev",
-    "build:frontend": "cd frontend && bun run build",
-    "build:backend": "cd backend && bun run build"
-  }
+  ]
 }
