@@ -1,6 +1,7 @@
 import { Hono } from 'hono'
-import { BACKEND_BASE_URL } from '../../lib/constants'
 import { googleAuth } from '@hono/oauth-providers/google'
+import { SCOPES } from '@/src/constants/scopes'
+import { REDIRECT_URL } from '@/src/constants/redirect-url'
 
 export const gmailOAuthRoutes = new Hono()
 
@@ -11,35 +12,12 @@ gmailOAuthRoutes.use(
   googleAuth({
     client_id: Bun.env.GOOGLE_CLIENT_ID,
     client_secret: Bun.env.GOOGLE_CLIENT_SECRET,
-    redirect_uri: `${BACKEND_BASE_URL}/api/auth/google/callback`,
-    scope: [
-      'openid',
-      'email',
-      'profile',
-      'https://www.googleapis.com/auth/gmail.modify',
-      'https://www.googleapis.com/auth/gmail.insert'
-    ],
+    redirect_uri: REDIRECT_URL.GMAIL.OAUTH,
+    scope: SCOPES.GMAIL,
     access_type: 'offline',
     prompt: 'consent'
   })
 )
-
-gmailOAuthRoutes.get('/test', async (c) => {
-  const res = await fetch(
-    'https://gmail.googleapis.com/gmail/v1/users/102739137290115770903/messages',
-    {
-      headers: {
-        Authorization: `Bearer`
-      }
-    }
-  )
-  const data = await res.json()
-  console.log(data)
-  return c.json({
-    message: 'Success',
-    data
-  })
-})
 
 // runs after successful authentication
 gmailOAuthRoutes.get('/callback', (c) => {

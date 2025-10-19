@@ -1,8 +1,7 @@
 import { Hono } from 'hono'
 
 import { routes } from './routes'
-
-const PORT = Bun.env.PORT // process works too
+import { PORT } from './constants'
 
 export const app = new Hono()
 
