@@ -4,4 +4,8 @@ import { Hono } from 'hono'
 
 export const emailRoutes = new Hono()
 
+<<<<<<< HEAD
 emailRoutes.get('/', getEmails)
+=======
+emailRoutes.get('/test', getEmails)
+>>>>>>> 294f5cdda32b42a1af10a700e0598dc1b2d848c4
