@@ -1,12 +1,12 @@
 'use client'
 
-import { Handle, Position, NodeProps } from '@xyflow/react'
+import { Handle, Position, NodeProps, useReactFlow } from '@xyflow/react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 
-import { Pause, Play, Settings, Trash2 } from 'lucide-react'
+import { Pause, Play, Settings, Trash2, Plus } from 'lucide-react'
 import Image from 'next/image'
-import React, { useState } from 'react'
+import React from 'react'
 import { BaseNodeProps } from '@/types/node.types'
 import { NODE_DEFINITIONS } from '@/constants/registry'
 
@@ -14,22 +14,17 @@ import { NodeActionsSheet } from './NodeActionsSheet'
 
 import {
   ContextMenu,
-  ContextMenuCheckboxItem,
   ContextMenuContent,
   ContextMenuItem,
-  ContextMenuLabel,
-  ContextMenuRadioGroup,
-  ContextMenuRadioItem,
-  ContextMenuSeparator,
-  ContextMenuShortcut,
-  ContextMenuSub,
-  ContextMenuSubContent,
-  ContextMenuSubTrigger,
   ContextMenuTrigger
 } from '@/components/ui/context-menu'
 
 export function BaseNode({ data, id }: NodeProps<BaseNodeProps>) {
   const node = NODE_DEFINITIONS[data.type]
+  const { getEdges } = useReactFlow()
+
+  // Check if the source handle is connected
+  const isSourceConnected = getEdges().some((edge) => edge.source === id)
 
   return (
     <ContextMenu>
@@ -50,7 +45,6 @@ export function BaseNode({ data, id }: NodeProps<BaseNodeProps>) {
             className={`
         relative w-48 p-4 rounded-lg border transition-all duration-200
         bg-card/95 backdrop-blur-sm border-border/50
-        hover:shadow-2xl hover:border-2
       `}
           >
             {/* Content */}
@@ -86,23 +80,36 @@ export function BaseNode({ data, id }: NodeProps<BaseNodeProps>) {
             <Handle
               type='target'
               position={Position.Left}
-              className='w-6 h-6 bg-gradient-to-br from-gray-600 to-gray-700 border-2 border-white shadow-lg hover:from-gray-700 hover:to-gray-800 hover:scale-110 transition-all duration-200'
               style={{
-                top: '50%',
-                transform: 'translateY(-50%)',
-                left: '-12px'
+                width: '6px',
+                borderRadius: '2px 0px 0px 2px',
+                height: '22px',
+                left: '-3px',
+                border: 'none',
+                background: 'gray'
               }}
             />
+
+            {/* Right handle - Conditional styling based on connection state */}
             <Handle
+              className='!bg-muted-foreground !border-muted-foreground'
+              style={{
+                width: 8,
+                height: 8,
+                cursor: isSourceConnected ? 'crosshair' : 'pointer'
+              }}
               type='source'
               position={Position.Right}
-              className='w-6 h-6 bg-gradient-to-br from-gray-800 to-gray-900 border-2 border-white shadow-lg hover:from-gray-900 hover:to-black hover:scale-110 transition-all duration-200'
-              style={{
-                top: '50%',
-                transform: 'translateY(-50%)',
-                right: '-12px'
-              }}
-            />
+            >
+              {!isSourceConnected && (
+                <div className='flex items-center -translate-y-[12px]'>
+                  <div className='min-w-12 ml-1 border-t-2 border-muted-foreground' />
+                  <div className='border-2 p-1 rounded border-muted-foreground'>
+                    <Plus className='text-muted-foreground' size={16} />
+                  </div>
+                </div>
+              )}
+            </Handle>
           </Card>
         </div>
       </ContextMenuTrigger>

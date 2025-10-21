@@ -8,7 +8,6 @@ import {
   applyNodeChanges,
   addEdge,
   Edge,
-  EdgeTypes,
   ConnectionLineType
 } from '@xyflow/react'
 
@@ -16,7 +15,6 @@ import type {
   Node,
   OnConnect,
   OnEdgesChange,
-  OnNodeDrag,
   OnNodesChange
 } from '@xyflow/react'
 
@@ -62,7 +60,7 @@ export default function App() {
         addEdge(
           {
             ...connection,
-            type: 'smoothstep',
+            type: 'bezier',
             style: {
               strokeWidth: 2,
               stroke: '#9ca3af'
@@ -80,10 +78,6 @@ export default function App() {
     [setEdges]
   )
 
-  const onNodeDrag: OnNodeDrag = (_, node) => {
-    console.log('drag event', node.data)
-  }
-
   return (
     <div className='w-full h-screen'>
       <ReactFlow
@@ -96,7 +90,7 @@ export default function App() {
         className='bg-background'
         connectionLineType={ConnectionLineType.Bezier}
         defaultEdgeOptions={{
-          type: 'smoothstep',
+          type: 'bezier',
           style: {
             strokeWidth: 2,
             stroke: '#9ca3af'
