@@ -1,5 +1,6 @@
 import { API_ROUTES } from '@/src/constants'
-import { extractGmailMessageContent, tryCatch } from '@/src/lib/utils'
+import { extractGmailMessageContent } from '@/src/helper/gmail-helper'
+import { tryCatch } from '@/src/lib/utils'
 import { AppError } from '@/src/types'
 import { Context } from 'hono'
 
