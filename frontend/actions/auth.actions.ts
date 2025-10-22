@@ -1,9 +1,9 @@
 'use server'
 
+import { tryCatch } from '@/lib/utils'
 import { signupFormSchema } from '@/schema/auth.schema'
 import { TLoginForm, TSignUpForm } from '@/types/auth.types'
 import { prisma } from '@shared/db/prisma'
-import { tryCatch } from '@shared/lib/utils'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import { cookies } from 'next/headers'

@@ -4,5 +4,3 @@ import { Hono } from 'hono'
 export const gmailMessageRoutes = new Hono()
 
 gmailMessageRoutes.get('/', getEmails)
-gmailMessageRoutes.post('/', getEmails)
-gmailMessageRoutes.delete('/', getEmails)

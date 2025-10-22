@@ -1,16 +1,16 @@
 # global registry
 node_modules
 
-/backend/.env
-
 /frontend/.next/
-/frontend/.env
-
 /frontend/next-env.d.ts
+
+/backend/.env
+/frontend/.env
+shared/.env
+
 
 # prisma generated files
 /shared/src/prisma/generated/prisma
 
 # prisma cache
 /shared/node_modules
-

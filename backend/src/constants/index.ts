@@ -10,8 +10,10 @@ export const GMAIL_API_BASE_URL = 'https://gmail.googleapis.com/gmail/v1'
 const API_ROUTES = {
   GMAIL: {
     GET_MESSAGES: GMAIL_API_BASE_URL + `/users/me/messages`,
+
     GET_MESSAGE: (id: string) =>
       GMAIL_API_BASE_URL + `/users/me/messages/${id}`,
+
     GET_ATTACHMENT: (messageId: string, attachmentId: string) =>
       GMAIL_API_BASE_URL +
       `/users/me/messages/${messageId}/attachments/${attachmentId}`

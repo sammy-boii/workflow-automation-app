@@ -26,19 +26,13 @@ gmailOAuthRoutes.get('/callback', (c) => {
   if (!user) {
     return c.json(
       {
-        message: 'Unauthorized',
         error: 'No user found'
       },
       401
     )
   }
 
-  console.log(
-    c.get('granted-scopes'),
-    c.get('token'),
-    c.get('user-google'),
-    c.get('refresh-token')
-  )
+  console.log(c.get('token'))
 
   return c.json({
     message: 'Successfully authenticated with Google',
@@ -55,8 +49,6 @@ gmailOAuthRoutes.get('/callback', (c) => {
   const token = c.get('token')
   const grantedScopes = c.get('granted-scopes')
   const user = c.get('user-google')
-
-  console.log(token, grantedScopes, user)
 
   return c.json({
     token,
